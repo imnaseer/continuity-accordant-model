@@ -746,7 +746,9 @@
   var scenarios = [];
   var current = 0;
   var frame = 0;
-  var view = "model";   // "model" (generic) or "story" (Continuity-specific)
+  // "story" is the Continuity-specific picture, "model" the generic state.
+  // The picture opens first: it is the one that explains itself.
+  var view = "story";
 
   function $(id) { return document.getElementById(id); }
   function scenario() { return scenarios[current]; }
