@@ -3,7 +3,15 @@
 A model of **Continuity** — the multi-writer log Cursor describes in
 [Git at any scale](https://cursor.com/blog/git-at-any-scale) — written with
 [Accordant](https://github.com/microsoft/accordant), Microsoft's model-based
-testing and model-checking framework for .NET.
+testing framework for .NET.
+
+> **On the model-checking side.** Accordant itself is public and released. The
+> model-checking layer this sample leans on — temporal properties in LTL, and
+> scenarios as regular expressions over states in RLTL — is **still under
+> active development and not yet released**. It lives on an unmerged branch,
+> which this repository pins exactly (see
+> [the dependency note](#a-note-on-the-dependency)). Expect those APIs to
+> change.
 
 Replicas share an append-only log kept in object storage. There is no lock and
 no coordinator: a writer claims a position by compare-and-swapping a single
@@ -56,12 +64,20 @@ does not have.
 
 ## A note on the dependency
 
-Accordant is pinned as a submodule to
-[`40c2ffc`](https://github.com/microsoft/accordant/commit/40c2ffc) on the
-branch `personal/imnaseer/rltl-port-refined`. That branch is not yet merged to
-`main`: this model uses the RLTL support — regular expressions over states —
-which lives there for now. The pin is exact, so this repository keeps building
-whatever happens upstream.
+Accordant is a released, public framework for model-based testing. Its
+**model-checking** support is newer: `LtlCheck` for temporal properties, and
+`RltlCheck` for the regular expressions over states that this sample's
+scenarios are written in. That work is **in progress and unreleased**, and
+lives for now on the branch `personal/imnaseer/rltl-port-refined`.
+
+So there is no package to depend on. Accordant is a git submodule pinned to
+[`40c2ffc`](https://github.com/microsoft/accordant/commit/40c2ffc) on that
+branch. The pin is exact, so this repository keeps building whatever happens
+upstream — and when the branch merges, the pin moves to a commit on `main`.
+
+Treat the model-checking APIs used here as provisional. The protocol, the
+specification and the properties are not going to change; the exact spelling
+of `RltlCheck.Check`, `Regex.Star` and `Fairness.StrongEach` might.
 
 ## Credit
 

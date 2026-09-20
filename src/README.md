@@ -12,6 +12,11 @@ repository is the sequence of values applied to it.
 [spec]: https://github.com/Vanlightly/s3-wal-collection/tree/main/cursor
 [post]: https://cursor.com/blog/git-at-any-scale
 
+> The properties and scenarios here use Accordant's **model-checking** support
+> — `LtlCheck`, `RltlCheck`, `Regex` over states — which is under active
+> development and not yet released. The framework itself is released; this
+> layer is not, and its APIs may change.
+
 ## Start here
 
 Read four things, in this order, and you have the protocol:
