@@ -1,0 +1,4 @@
+<Project>
+  <!-- Likewise for central package management: Accordant pins its own
+       package versions and must not inherit this repo's. -->
+</Project>

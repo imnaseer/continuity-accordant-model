@@ -1,0 +1,1536 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Continuity Walkthrough</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --ground: #F7F8FA;
+    --panel: #FFFFFF;
+    --panel-2: #F0F2F6;
+    --line: #DDE1E9;
+    --line-soft: #E8EBF1;
+    --ink: #161B25;
+    --ink-2: #4A5468;
+    --ink-3: #7A849A;
+
+    --accent: #D9541E;
+    --accent-bg: #FCEFE8;
+    --accent-line: #F0B79A;
+    --index: #8A6410;
+    --index-bg: #FBF6EC;
+    --index-line: #E2D2AE;
+    --r1: #2563A8;
+    --r1-bg: #EAF1FA;
+    --r1-line: #B6CCE8;
+    --r2: #2C7A5A;
+    --r2-bg: #E9F4EF;
+    --r2-line: #AFD6C5;
+    --gc: #A8323C;
+    --gc-bg: #FBEBEC;
+    --gc-line: #E4B0B5;
+    --good: #2C6E49;
+    --good-bg: #E7F2EB;
+
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0F1620;
+      --panel: #161E2A;
+      --panel-2: #1D2735;
+      --line: #2C3849;
+      --line-soft: #232E3D;
+      --ink: #E8ECF3;
+      --ink-2: #A7B2C4;
+      --ink-3: #74809A;
+
+      --accent: #F07A47;
+      --accent-bg: #2E1A11;
+      --accent-line: #6B3A22;
+      --index: #D8B876;
+      --index-bg: #23200F;
+      --index-line: #574C2C;
+      --r1: #6BA6E0;
+      --r1-bg: #13243A;
+      --r1-line: #2D4A6E;
+      --r2: #6FC3A0;
+      --r2-bg: #10291F;
+      --r2-line: #2A5644;
+      --gc: #E0757F;
+      --gc-bg: #2E1A1D;
+      --gc-line: #5E3036;
+      --good: #6BBF8E;
+      --good-bg: #16291F;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0F1620;
+    --panel: #161E2A;
+    --panel-2: #1D2735;
+    --line: #2C3849;
+    --line-soft: #232E3D;
+    --ink: #E8ECF3;
+    --ink-2: #A7B2C4;
+    --ink-3: #74809A;
+
+    --accent: #F07A47;
+    --accent-bg: #2E1A11;
+    --accent-line: #6B3A22;
+    --index: #D8B876;
+    --index-bg: #23200F;
+    --index-line: #574C2C;
+    --r1: #6BA6E0;
+    --r1-bg: #13243A;
+    --r1-line: #2D4A6E;
+    --r2: #6FC3A0;
+    --r2-bg: #10291F;
+    --r2-line: #2A5644;
+    --gc: #E0757F;
+    --gc-bg: #2E1A1D;
+    --gc-line: #5E3036;
+    --good: #6BBF8E;
+    --good-bg: #16291F;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 22px 32px;
+  }
+
+  /* ---- header ---- */
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin: 0 0 14px;
+  }
+
+  .lede { max-width: 66ch; color: var(--ink-2); margin: 0; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  /* ---- scenario tabs ---- */
+
+  .tabrow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tabrow-name {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-3);
+    min-width: 8ch; flex-shrink: 0;
+  }
+  .tabs { display: flex; flex-direction: column; gap: 7px; margin: 0; }
+
+  .tabs button {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-2);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .tabs button:hover { color: var(--ink); border-color: var(--ink-3); }
+  .tabs button[aria-selected="true"] {
+    color: var(--ground); background: var(--ink); border-color: var(--ink);
+  }
+  .tabs button:focus-visible { outline: 2px solid var(--r1); outline-offset: 2px; }
+  /* ---- timeline ----
+     One cell per state, all alike. Which steps matter is what the reader is
+     working out; the picture should not answer it for them. */
+
+  .timeline { margin-top: 16px; }
+  .steps { display: flex; gap: 3px; overflow-x: auto; padding-bottom: 4px; }
+
+  .stepbtn {
+    flex: 1 1 0;
+    min-width: 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  .stepbtn .bar {
+    height: 8px; border-radius: 2px;
+    background: var(--ink-3); opacity: .22;
+    transition: transform .12s, opacity .12s;
+  }
+  .stepbtn.done .bar { opacity: .45; }
+  .stepbtn.now .bar { opacity: 1; transform: scaleY(1.8); }
+  .stepbtn .n {
+    font-family: var(--mono); font-size: 9px; color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .stepbtn.now .n { color: var(--ink); font-weight: 700; }
+  .stepbtn:hover .bar { opacity: .8; }
+  .stepbtn:focus-visible { outline: 2px solid var(--ink-3); outline-offset: 3px; border-radius: 4px; }
+
+  /* ---- the step ---- */
+
+  .step {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 34px;
+    flex-wrap: wrap;
+  }
+  .step-n {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+    letter-spacing: .08em; font-variant-numeric: tabular-nums;
+  }
+  .step-op { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .op-action {
+    font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--ink);
+  }
+  .op-label {
+    font-family: var(--mono); font-size: 11.5px; color: var(--ink-3);
+  }
+  .op-said { font-size: 13px; color: var(--ink-2); }
+
+  /* ---- the view switch ---- */
+
+  .views { display: flex; gap: 4px; margin-top: 16px; }
+  .views button {
+    font-family: var(--sans); font-size: 12.5px; font-weight: 500;
+    padding: 5px 13px; border-radius: 6px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink-2);
+  }
+  .views button:hover { color: var(--ink); border-color: var(--ink-3); }
+  .views button[aria-selected="true"] {
+    background: var(--ink); border-color: var(--ink); color: var(--ground);
+  }
+
+  /* ---- the model view ----
+     The state as the checker holds it, with what this step changed marked.
+     Nothing here is specific to this protocol. */
+
+  .model-view { margin-top: 12px; }
+  .model-head {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 11px;
+  }
+  .model-head .tag {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    padding: 3px 8px; border-radius: 5px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink);
+  }
+  .model-head .tag.soft { font-weight: 400; color: var(--ink-3); }
+  .model-note { font-size: 12.5px; color: var(--ink-3); }
+
+  .fields {
+    border: 1px solid var(--line); border-radius: 9px;
+    background: var(--panel); overflow: hidden;
+  }
+  .field {
+    display: grid; grid-template-columns: minmax(0, 22ch) minmax(0, 1fr);
+    gap: 14px; padding: 4px 13px;
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.55;
+    border-top: 1px solid var(--line-soft);
+  }
+  .field:first-child { border-top: 0; }
+
+  /* The nesting, drawn as indentation with a rule per level, so a reader can
+     see which branch a row belongs to without reading its whole path. */
+  .field-k {
+    color: var(--ink-3); overflow-wrap: anywhere;
+    padding-left: calc(var(--depth, 0) * 15px);
+    position: relative;
+  }
+  .field-k::before {
+    content: "";
+    position: absolute; left: 0; top: -4px; bottom: -4px;
+    width: calc(var(--depth, 0) * 15px);
+    background-image: repeating-linear-gradient(
+      to right, var(--line-soft) 0 1px, transparent 1px 15px);
+  }
+  .field-v { color: var(--ink-2); overflow-wrap: anywhere; }
+  .field-was { color: var(--ink-3); opacity: .75; margin-right: 2px; }
+
+  /* A branch: the name of an object or array, with its size beside it. */
+  .field.branch { background: var(--panel-2); }
+  .field.branch .field-k { color: var(--ink); font-weight: 700; }
+  .field.branch .field-v.note { color: var(--ink-3); font-style: italic; }
+
+  /* What this step changed. This is the whole point of the view: the state
+     is large and the step is small, so the difference is what to look at. */
+  .field.changed { background: var(--accent-bg); }
+  .field.changed .field-k { color: var(--accent); }
+  .field.changed .field-v { color: var(--ink); font-weight: 600; }
+  .field.gone { background: var(--gc-bg); }
+  .field.gone .field-k, .field.gone .field-v { color: var(--gc); }
+
+
+  /* ---- the spatial stage ---- */
+
+  .stage-wrap { margin-top: 12px; }
+
+  .stage-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 210px minmax(0, 1fr);
+    align-items: start;
+    gap: 0;
+    padding: 0;
+    position: relative;
+    /* Steady height: panels grow and shrink between steps, and without this
+       the phase bar walks up and down the page as you step. */
+    min-height: 330px;
+  }
+
+  .wirecol { position: relative; align-self: stretch; min-height: 170px; }
+  .wires { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .wires line { stroke: var(--line); stroke-width: 1.4; stroke-dasharray: 3 4; }
+  .wires line.live { stroke: var(--accent); stroke-dasharray: none; stroke-width: 1.8; }
+
+  /* The request on the wire: what this replica is asking the store for,
+     and what came back. It belongs here, not in the store — the store only
+     sees a conditional request arrive and accepts or rejects it. */
+  .edgelabel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 9px 7px;
+    border-radius: 7px;
+    border: 1px solid var(--accent-line);
+    background: var(--panel);
+    white-space: normal;
+    max-width: 190px;
+    text-align: center;
+    z-index: 2;
+  }
+  .edge-detail {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-2);
+    text-align: center;
+  }
+  .edge-verdict {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .edgelabel.ok  .edge-verdict { color: var(--good); }
+  .edgelabel.ok  { border-color: var(--good); }
+  .edgelabel.no  .edge-verdict { color: var(--gc); }
+  .edgelabel.no  { border-color: var(--gc-line); }
+
+  .box {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--panel);
+    margin-bottom: 12px;
+  }
+  .box:last-child { margin-bottom: 0; }
+
+  .box-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 11px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .box-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .box-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); flex: none; }
+  .box[data-who="r1"] .box-dot { background: var(--r1); }
+  .box[data-who="r2"] .box-dot { background: var(--r2); }
+  .box-state {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .box.acting { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+  .box.acting .box-state { color: var(--accent); }
+
+  .box-body { padding: 10px 11px 11px; }
+
+  /* an index table, as each holder sees it */
+  .idx {
+    border: 1px solid var(--line-soft);
+    border-radius: 7px;
+    background: var(--panel-2);
+    padding: 8px 9px 9px;
+  }
+  .idx-name {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--ink);
+    margin-bottom: 7px;
+  }
+  .idx-etag { font-weight: 400; font-size: 10px; color: var(--ink-3); letter-spacing: .06em; }
+  .idx-etag.stale { color: var(--gc); }
+
+  .idx-row {
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+    align-items: center;
+    gap: 7px;
+    padding: 2px 0;
+    font-family: var(--mono);
+    font-size: 11.5px;
+  }
+  .idx-pos { color: var(--ink-3); }
+  .idx-wire { height: 1px; background: var(--line); position: relative; }
+  .idx-wire::after {
+    content: "\25B8"; position: absolute; right: -2px; top: -8px;
+    font-size: 9px; color: var(--ink-3);
+  }
+  .idx-ref {
+    padding: 2px 7px; border-radius: 4px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+  }
+  .idx-row.mine .idx-wire { background: currentColor; }
+  .idx-row.mine .idx-ref { border-color: currentColor; }
+  .box[data-who="r1"] .idx-row.mine { color: var(--r1); }
+  .box[data-who="r2"] .idx-row.mine { color: var(--r2); }
+  .idx-row.snap .idx-ref { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+
+  /* A position a writer intends to claim but has not yet won. */
+  .idx-row.wants .idx-ref { border-style: dashed; }
+  .idx-row.wants .idx-pos::after { content: " ?"; opacity: .6; }
+  .idx-empty { font-size: 11.5px; color: var(--ink-3); font-style: italic; font-family: var(--sans); }
+
+  .repo { display: flex; gap: 5px; align-items: center; flex-wrap: wrap;
+          font-family: var(--mono); font-size: 11.5px; margin-top: 9px; }
+  .repo .label { color: var(--ink-3); font-size: 9.5px; letter-spacing: .08em; }
+  .cell { min-width: 22px; text-align: center; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+  .box[data-who="r1"] .cell { background: var(--r1-bg); border: 1px solid var(--r1-line); color: var(--r1); }
+  .box[data-who="r2"] .cell { background: var(--r2-bg); border: 1px solid var(--r2-line); color: var(--r2); }
+  .repo .none { color: var(--ink-3); font-style: italic; font-family: var(--sans); }
+
+  .bet {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 8px; font-family: var(--mono); font-size: 10.5px;
+  }
+  .bet-k { color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; font-size: 9px; }
+  .bet-v {
+    padding: 2px 7px; border-radius: 4px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink);
+    font-weight: 700;
+  }
+  .bet.stale .bet-v { border-color: var(--gc-line); background: var(--gc-bg); color: var(--gc); }
+
+
+  /* the store column */
+  .store {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--panel-2);
+    padding: 11px 12px 12px;
+  }
+  .store > .box-title { margin-bottom: 3px; }
+  .sub {
+    font-family: var(--mono); font-size: 9.5px; color: var(--ink-3);
+    margin: 0 0 9px; letter-spacing: .04em;
+  }
+  .store .idx { background: var(--panel); margin-top: 10px; }
+
+  .objects { display: flex; flex-wrap: wrap; gap: 6px; min-height: 30px; }
+  .obj {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 500;
+    padding: 4px 9px; border-radius: 5px;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink);
+  }
+  .obj small { color: var(--ink-3); font-size: 9.5px; margin-left: 5px; }
+  .obj.snapshot { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+  .obj.gone { background: var(--gc-bg); border-color: var(--gc-line); color: var(--gc); text-decoration: line-through; opacity: .7; }
+  .obj.pending { border-style: dashed; border-color: var(--accent-line); }
+  .empty-note { font-size: 11.5px; color: var(--ink-3); font-style: italic; }
+
+  .cas[hidden] { display: none !important; }
+  .cas {
+    display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+    margin-top: 10px; padding: 8px 10px;
+    border-radius: 7px; border: 1px dashed var(--line); background: var(--panel);
+  }
+  .cas-side {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    padding: 3px 8px; border-radius: 5px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink);
+  }
+  .cas-side small { display: block; font-size: 8.5px; color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; }
+  .cas-op { font-family: var(--mono); font-size: 15px; font-weight: 700; }
+  .cas.match .cas-op, .cas.match .cas-verdict { color: var(--good); }
+  .cas.match .cas-side { border-color: var(--good); background: var(--good-bg); }
+  .cas.clash .cas-op, .cas.clash .cas-verdict { color: var(--gc); }
+  .cas.clash .cas-side { border-color: var(--gc-line); background: var(--gc-bg); }
+  .cas-label {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .cas-verdict { font-size: 15px; font-weight: 700; margin-left: auto; }
+
+  .history {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--line);
+  }
+  .history .label { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em;
+                    text-transform: uppercase; color: var(--ink-3); }
+  .hcell {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 500;
+    padding: 3px 8px; border-radius: 5px;
+    background: var(--good-bg); border: 1px solid var(--good); color: var(--good);
+  }
+
+  .gc-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+            margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--line); }
+  .gc-state {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+    padding: 2px 8px; border-radius: 4px;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink-3);
+  }
+  .gc-state.on { background: var(--gc-bg); border-color: var(--gc-line); color: var(--gc); }
+  .gc-note { font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+
+  /* ---- the phase bar, the whole arc at a glance ---- */
+
+  .phases {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    border-top: 1px solid var(--line);
+  }
+  .phase {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: var(--panel-2);
+    border: 0;
+    border-right: 1px solid var(--line);
+    padding: 10px 6px;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .phase:last-child { border-right: 0; }
+  .phase:hover { color: var(--ink-2); }
+  .phase.done { color: var(--ink-2); background: var(--panel); }
+  .phase.now {
+    color: var(--accent);
+    font-weight: 700;
+    background: var(--accent-bg);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+  .phase:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+
+  /* ---- transport ---- */
+
+  .transport {
+    display: flex; align-items: center; gap: 7px;
+    margin-left: auto;
+  }
+  .transport button {
+    font-family: var(--sans); font-size: 13px; font-weight: 500;
+    padding: 5px 12px; border-radius: 6px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer;
+  }
+  .transport #prev, .transport #next {
+    font-family: var(--mono); font-size: 14px; padding: 4px 13px;
+  }
+  .transport button:hover:not(:disabled) { border-color: var(--ink-3); }
+  .transport button:disabled { opacity: .4; cursor: default; }
+  .transport button.primary { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+  .transport button:focus-visible { outline: 2px solid var(--r1); outline-offset: 2px; }
+  .counter {
+    font-family: var(--mono); font-size: 11.5px; color: var(--ink-3);
+    font-variant-numeric: tabular-nums; min-width: 52px; text-align: right;
+  }
+
+  .hint { margin-top: 11px; font-size: 12.5px; color: var(--ink-3); }
+  .hint kbd {
+    font-family: var(--mono); font-size: 11px; padding: 1px 5px;
+    border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px;
+    background: var(--panel-2); color: var(--ink-2);
+  }
+
+  footer {
+    margin-top: 26px; padding-top: 15px; border-top: 1px solid var(--line-soft);
+    font-size: 12.5px; color: var(--ink-3); max-width: 74ch;
+  }
+  footer code { font-family: var(--mono); font-size: .9em; }
+
+  @media (max-width: 760px) {
+    .lower { grid-template-columns: 1fr; }
+  }
+</style>
+<div class="wrap">
+  <header>
+    <h1>Continuity</h1>
+    <div class="tabs" id="tabs" role="tablist"></div>
+  </header>
+
+  <div class="timeline">
+    <div class="steps" id="steps"></div>
+  </div>
+
+  <div class="step">
+    <span class="step-n" id="step-n"></span>
+    <span class="step-op" id="step-op"></span>
+    <span class="transport">
+      <button id="prev">&larr;</button>
+      <button id="next" class="primary">&rarr;</button>
+      <button id="restart">Restart</button>
+      <span class="counter" id="counter"></span>
+    </span>
+  </div>
+
+  <!-- Two ways of looking at the same run. "State" shows the state the
+       checker produced and what this step changed in it, and knows nothing
+       about this protocol. "Visual" is the Continuity-specific picture:
+       replicas, the store, and the request between them. -->
+  <div class="views" id="views" role="tablist">
+    <button type="button" data-view="model" role="tab">State</button>
+    <button type="button" data-view="story" role="tab">Visual</button>
+  </div>
+
+  <div id="model-view" class="model-view" hidden></div>
+
+  <div id="story-view" class="stage-wrap" hidden>
+    <div class="stage-grid">
+      <div class="col-replicas" id="replicas"></div>
+      <div class="wirecol">
+        <svg class="wires" id="wires" aria-hidden="true"></svg>
+        <div class="edgelabel" id="edgelabel" hidden></div>
+      </div>
+      <div class="col-store">
+        <div class="store">
+          <p class="box-title">object store</p>
+          <p class="sub">packfiles &middot; snapshots</p>
+          <div class="objects" id="objects"></div>
+          <div class="idx" id="store-index"></div>
+          <div class="history" id="history"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ------------------------------------------------------------------
+  // The page reads scenarios.json, which carries the model and nothing
+  // else: each frame is a state the checker produced, plus the action
+  // and label of the step that produced it.
+  //
+  // Everything below that turns those states into something a reader can
+  // follow — what a step asked the store for, whether its compare-and-swap
+  // won, which replica is stale — is derived here, in the page. None of it
+  // is in the export. That is the dividing line: the C# side knows the
+  // protocol, the page knows how to explain it, and the two can be
+  // changed independently.
+  // ------------------------------------------------------------------
+
+  var scenarios = [];
+  var current = 0;
+  var frame = 0;
+  var view = "model";   // "model" (generic) or "story" (Continuity-specific)
+
+  function $(id) { return document.getElementById(id); }
+  function scenario() { return scenarios[current]; }
+  function frames() { return scenario() ? scenario().frames : []; }
+  function at() { return frames()[frame]; }
+  function prev() { return frame > 0 ? frames()[frame - 1] : null; }
+
+  // ================= derived from the model =========================
+  // Facts the export does not carry because they are not state: they are
+  // read back off the state, here, the same way a reader would.
+
+  /// The log position an index describes: the highest entry it names, or
+  /// the snapshot frontier if that is further along.
+  function lengthOf(idx) {
+    var last = idx.SnapshotAt || 0;
+    Object.keys(idx.Entries).forEach(function (p) {
+      if (Number(p) > last) last = Number(p);
+    });
+    return last;
+  }
+  function nextPosition(idx) { return lengthOf(idx) + 1; }
+
+  /// A replica is stale when the index it holds is not the stored one.
+  /// This is the whole basis of the protocol: a stale holder's
+  /// compare-and-swap is the one that fails.
+  function isStale(r, st) {
+    return !!r.CachedIndex && r.CachedIndex.Version !== st.Store.Index.Version;
+  }
+
+  /// A label is the replica, and — where one replica has several steps of
+  /// the same action — which one, after a dash: "r1", or "r1-start".
+  function actorOf(f) {
+    if (!f || !f.label) return null;
+    var dash = f.label.indexOf("-");
+    return dash < 0 ? f.label : f.label.slice(0, dash);
+  }
+  function suffixOf(f) {
+    if (!f || !f.label) return null;
+    var dash = f.label.indexOf("-");
+    return dash < 0 ? null : f.label.slice(dash + 1);
+  }
+
+  /// One sentence for a step, in the protocol's vocabulary.
+  function describe(f) {
+    if (!f.action) return "The starting point";
+    var who = actorOf(f), what = suffixOf(f);
+    switch (f.action) {
+      case "ReadIndex":       return who + " reads the index";
+      case "UploadPackFile":  return who + " uploads " + what;
+      case "CommitToIndex":   return who + " attempts the compare-and-swap";
+      case "ApplyPackFile":   return who + " applies one entry";
+      case "LoadSnapshot":    return who + " loads the snapshot";
+      case "ServeRead":       return who + " serves a read";
+      case "WriteSnapshot":   return who + " writes a snapshot";
+      case "CommitSnapshot":  return who + " commits the snapshot";
+      default:                return f.action;
+    }
+  }
+
+  /// What this step put on the wire, worked out from the two states it
+  /// sits between. The one action that can fail is the compare-and-swap,
+  /// and whether it did is read from whether the stored version moved —
+  /// not asserted here.
+  function requestOf(f, before) {
+    if (!f.action || !before) return null;
+    var who = actorOf(f);
+    var was = replicaIn(before.state, who);
+    var now = replicaIn(f.state, who);
+    if (!was || !now) return null;
+
+    switch (f.action) {
+      case "UploadPackFile":
+        return { detail: now.Pending.PackFile + " → store", result: "pending" };
+
+      case "ReadIndex":
+        return {
+          detail: "cached ← index v" + now.CachedIndex.Version,
+          result: lengthOf(now.CachedIndex) > now.Repository.length ? "behind" : null
+        };
+
+      case "CommitToIndex":
+      case "CommitSnapshot": {
+        var won = f.state.Store.Index.Version !== before.state.Store.Index.Version;
+        return {
+          detail: "cached v" + was.CachedIndex.Version +
+                  " vs index v" + before.state.Store.Index.Version,
+          result: won ? "committed · index v" + f.state.Store.Index.Version
+                      : "CAS failed",
+          failed: !won
+        };
+      }
+
+      case "ApplyPackFile":
+        return {
+          detail: "repository ← entry " + (was.Repository.length + 1),
+          result: caughtUp(now) ? "caught up" : null
+        };
+
+      case "LoadSnapshot":
+        return {
+          detail: "repository ← snapshot " + was.CachedIndex.SnapshotAt,
+          result: caughtUp(now) ? "caught up" : null
+        };
+
+      case "WriteSnapshot":
+        return { detail: "snapshot " + lengthOf(was.CachedIndex) + " → store" };
+
+      case "ServeRead":
+        return { detail: "repository at position " + lengthOf(now.CachedIndex) };
+
+      default:
+        return null;
+    }
+  }
+
+  function caughtUp(r) { return !!r.CachedIndex && r.Repository.length >= lengthOf(r.CachedIndex); }
+
+  function replicaIn(st, name) { return st.Replicas[name] || null; }
+
+  /// The replicas, in the order the configuration names them.
+  function replicasOf(st) {
+    return Object.keys(st.Replicas).map(function (name) {
+      return { name: name, r: st.Replicas[name] };
+    });
+  }
+
+  // ================= the model view ================================
+  // Knows nothing about Continuity. It renders whatever fields the state
+  // happens to have, and marks the ones this step changed. Point it at a
+  // different Accordant model's export and it still works.
+
+  /// A state, flattened to `path = value` lines. Leaves are rendered as
+  /// JSON, so a path always names something a reader can compare.
+  function flatten(value, path, out) {
+    out = out || [];
+    if (value === null || typeof value !== "object") {
+      out.push({ path: path, text: JSON.stringify(value) });
+    } else if (Array.isArray(value)) {
+      // An array of scalars reads better as one line than as one per index.
+      if (value.every(function (v) { return v === null || typeof v !== "object"; })) {
+        out.push({ path: path, text: JSON.stringify(value) });
+      } else {
+        // A count on the array itself, so the path exists whether the array
+        // is empty or not. Without it, growing from [] to one element reads
+        // as the array being *removed* and separate fields appearing — which
+        // is exactly backwards on the step that adds the first packfile.
+        out.push({ path: path, text: value.length + " item" +
+          (value.length === 1 ? "" : "s") });
+        value.forEach(function (v, i) { flatten(v, path + "[" + i + "]", out); });
+      }
+    } else {
+      var keys = Object.keys(value);
+      if (!keys.length) out.push({ path: path, text: "{}" });
+      else keys.forEach(function (k) {
+        flatten(value[k], path ? path + "." + k : k, out);
+      });
+    }
+    return out;
+  }
+
+  /// Renders one state as a tree, with the leaves that differ from `was`
+  /// marked. Removed leaves are shown too — a field going away is a change,
+  /// and hiding it would make the step look smaller than it was.
+  ///
+  /// <para>The nesting is the state's own. `flatten` is still used, but only
+  /// to build the map of leaf paths to compare against: the shape is what a
+  /// reader needs, the paths are what the diff needs, and the two are kept
+  /// separate rather than one being sacrificed for the other.</para>
+  function renderModelState(st, was) {
+    var old = {};
+    if (was) flatten(was, "").forEach(function (r) { old[r.path] = r.text; });
+    var now = {};
+    flatten(st, "").forEach(function (r) { now[r.path] = r.text; });
+
+    // Leaves the previous state had and this one does not. Each is filed
+    // under the nearest ancestor that still exists, because that is the
+    // deepest point the walker will reach — the branch it actually hung from
+    // may have gone with it.
+    var removed = {};
+    if (was) {
+      Object.keys(old).forEach(function (p) {
+        if (p in now) return;
+        (removed[anchorFor(p, st)] = removed[anchorFor(p, st)] || []).push(p);
+      });
+    }
+
+    var host = document.createElement("div");
+    host.className = "fields";
+    node(host, st, "", 0, old, now, !!was, removed);
+    return host;
+  }
+
+  /// The deepest prefix of a removed path that is still a branch of `state` —
+  /// where the walker will be when it should draw the removal.
+  function anchorFor(path, state) {
+    var parts = path.split(".");
+    for (var take = parts.length - 1; take > 0; take--) {
+      var candidate = parts.slice(0, take).join(".");
+      var value = valueAt(state, candidate);
+      if (value !== undefined && !isLeafValue(value) && !isCompact(value)) {
+        return candidate;
+      }
+    }
+    return "";
+  }
+
+  /// Follows a flattened path — `replicas[0].cached` — into a state.
+  function valueAt(state, path) {
+    var value = state;
+    var tokens = path.match(/[^.\[\]]+/g) || [];
+    for (var i = 0; i < tokens.length; i++) {
+      if (value === null || typeof value !== "object") return undefined;
+      value = value[/^\d+$/.test(tokens[i]) ? Number(tokens[i]) : tokens[i]];
+      if (value === undefined) return undefined;
+    }
+    return value;
+  }
+
+  /// One value of the tree: a branch gets a heading and its children indented
+  /// under it, a leaf gets a row.
+  function node(host, value, path, depth, old, now, diffing, removed) {
+    if (isLeafValue(value)) {
+      var changed = diffing && old[path] !== now[path];
+      host.appendChild(leaf(
+        lastSegment(path), now[path], changed ? "changed" : "",
+        changed && old[path] !== undefined ? old[path] : null, depth));
+      return;
+    }
+    removed = removed || {};
+
+    var array = Array.isArray(value);
+    var keys = array ? value : Object.keys(value);
+    var nameOf = array ? null : namedBy(value);
+
+    keys.forEach(function (k, i) {
+      var child = array ? value[i] : value[k];
+      var name = array ? labelFor(child, i) : k;
+      var childPath = array
+        ? path + "[" + i + "]"
+        : (path ? path + "." + k : k);
+
+      // A field that gave this group its name is not repeated inside it.
+      if (array === false && k === nameOf && depth > 0) return;
+
+      if (isLeafValue(child)) {
+        var changed = diffing && old[childPath] !== now[childPath];
+        host.appendChild(leaf(
+          name, now[childPath], changed ? "changed" : "",
+          changed && old[childPath] !== undefined ? old[childPath] : null, depth));
+      } else if (isCompact(child)) {
+        // One line. It changed if any of its fields did.
+        var fields = Object.keys(child);
+        var differs = diffing && fields.some(function (k) {
+          return old[childPath + "." + k] !== now[childPath + "." + k];
+        });
+        var wasAll = fields.every(function (k) {
+          return old[childPath + "." + k] !== undefined;
+        });
+        var skip = array ? namedBy(child) : null;
+        host.appendChild(leaf(
+          name, compactText(child, skip), differs ? "changed" : "",
+          differs && wasAll ? fields.filter(function (k) { return k !== skip; })
+            .map(function (k) { return k + " " + old[childPath + "." + k]; })
+            .join("  \u00b7  ") : null, depth));
+      } else {
+        host.appendChild(branch(name, summary(child), depth));
+        node(host, child, childPath, depth + 1, old, now, diffing, removed);
+      }
+    });
+
+    // Anything that used to hang here and no longer does.
+    (removed[path] || []).forEach(function (p) {
+      var name = path ? p.slice(path.length + 1) : p;
+      host.appendChild(leaf(name, "\u2014", "gone", old[p], depth));
+    });
+  }
+
+  /// Whether `flatten` would emit this value as a single row.
+  function isLeafValue(value) {
+    if (value === null || typeof value !== "object") return true;
+    if (Array.isArray(value)) {
+      return value.every(function (v) { return v === null || typeof v !== "object"; });
+    }
+    return Object.keys(value).length === 0;
+  }
+
+  /// An object small enough to read on one line — every field a scalar, and
+  /// few enough of them that the line stays short. Giving `{position: 1,
+  /// id: "p1"}` a heading and two rows of its own costs three lines to say
+  /// what one line says better.
+  function isCompact(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+    var keys = Object.keys(value);
+    return keys.length > 0 && keys.length <= 3 && keys.every(function (k) {
+      var v = value[k];
+      return v === null || typeof v !== "object";
+    });
+  }
+
+  /// A compact object as one line: `position 1 · id "p1"`. The field that
+  /// gave the row its name is left out, since the name already shows it.
+  function compactText(value, skip) {
+    var text = Object.keys(value)
+      .filter(function (k) { return k !== skip; })
+      .map(function (k) { return k + " " + JSON.stringify(value[k]); })
+      .join("  \u00b7  ");
+    return text || JSON.stringify(value[skip]);
+  }
+
+  /// What to call one element of an array. An element that carries its own
+  /// name or id is labelled with it — a convention, not knowledge of this
+  /// protocol — and anything else falls back to its index.
+  function labelFor(value, i) {
+    var from = namedBy(value);
+    if (from) {
+      return from === "position" ? "#" + value[from] : String(value[from]);
+    }
+    return "[" + i + "]";
+  }
+
+  /// Which field, if any, gave an array element its name.
+  function namedBy(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+    if (typeof value.name === "string") return "name";
+    if (typeof value.id === "string") return "id";
+    if (typeof value.position === "number") return "position";
+    return null;
+  }
+
+  function summary(value) {
+    if (Array.isArray(value)) {
+      return value.length + " item" + (value.length === 1 ? "" : "s");
+    }
+    return "";
+  }
+
+  function lastSegment(path) {
+    var dot = path.lastIndexOf(".");
+    return dot < 0 ? path : path.slice(dot + 1);
+  }
+
+  function branch(name, note, depth) {
+    var row = document.createElement("div");
+    row.className = "field branch";
+    row.style.setProperty("--depth", depth);
+    var k = document.createElement("span");
+    k.className = "field-k";
+    k.textContent = name;
+    row.appendChild(k);
+    var v = document.createElement("span");
+    v.className = "field-v note";
+    v.textContent = note;
+    row.appendChild(v);
+    return row;
+  }
+
+  function leaf(name, text, cls, before, depth) {
+    var row = document.createElement("div");
+    row.className = "field " + cls;
+    row.style.setProperty("--depth", depth);
+
+    var k = document.createElement("span");
+    k.className = "field-k";
+    k.textContent = name;
+    row.appendChild(k);
+
+    var v = document.createElement("span");
+    v.className = "field-v";
+    if (before !== null && before !== undefined) {
+      var b = document.createElement("s");
+      b.className = "field-was";
+      b.textContent = before;
+      v.appendChild(b);
+      v.appendChild(document.createTextNode(" "));
+    }
+    v.appendChild(document.createTextNode(text));
+    row.appendChild(v);
+    return row;
+  }
+
+  function renderModelView() {
+    var f = at(), p = prev();
+    var host = $("model-view");
+    host.textContent = "";
+
+    var head = document.createElement("div");
+    head.className = "model-head";
+    head.innerHTML = f.action
+      ? '<span class="tag">' + f.action + "</span>" +
+        '<span class="tag soft">' + f.label + "</span>" +
+        '<span class="model-note">produced the state below</span>'
+      : '<span class="model-note">the initial state</span>';
+    host.appendChild(head);
+
+    host.appendChild(renderModelState(f.state, p ? p.state : null));
+  }
+
+  // ================= chrome: tabs, timeline, step ===================
+
+  /// The scenarios, in rows by whatever group they name.
+  ///
+  /// The groups are not a fixed list: they are read off the scenarios, in the
+  /// order they first appear, and a scenario naming none goes in an unlabelled
+  /// row. Adding a group in the spec adds a row here and nothing else.
+  function renderTabs() {
+    var host = $("tabs");
+    host.textContent = "";
+
+    var order = [];
+    var byGroup = {};
+    scenarios.forEach(function (s, i) {
+      var g = s.group || "";
+      if (!(g in byGroup)) { byGroup[g] = []; order.push(g); }
+      byGroup[g].push(i);
+    });
+
+    order.forEach(function (g) {
+      var row = document.createElement("div");
+      row.className = "tabrow";
+
+      var name = document.createElement("span");
+      name.className = "tabrow-name";
+      name.textContent = g;
+      row.appendChild(name);
+
+      byGroup[g].forEach(function (i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("role", "tab");
+        b.setAttribute("aria-selected", String(i === current));
+        b.textContent = scenarios[i].title;
+        b.dataset.scenario = i;
+        b.addEventListener("click", function () {
+          current = i; frame = 0; render();
+        });
+        row.appendChild(b);
+      });
+
+      host.appendChild(row);
+    });
+  }
+
+  /// One cell per state. Uniform: a step is a step, and the picture does
+  /// not decide in advance which ones matter.
+  function renderTimeline() {
+    var host = $("steps");
+    host.textContent = "";
+    frames().forEach(function (f, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "stepbtn" + (i === frame ? " now" : "") + (i < frame ? " done" : "");
+      b.title = i + " · " + describe(f);
+      var bar = document.createElement("span");
+      bar.className = "bar";
+      b.appendChild(bar);
+      var n = document.createElement("span");
+      n.className = "n";
+      n.textContent = i;
+      b.appendChild(n);
+      b.addEventListener("click", function () { frame = i; render(); });
+      host.appendChild(b);
+    });
+  }
+
+  function renderStep() {
+    var f = at();
+    $("step-n").textContent = String(f.index).padStart(2, "0");
+    var op = $("step-op");
+    op.textContent = "";
+    if (!f.action) {
+      op.appendChild(document.createTextNode("the initial state"));
+      return;
+    }
+    // The model's own action name and label, then the sentence the page
+    // makes of it.
+    var a = document.createElement("span");
+    a.className = "op-action";
+    a.textContent = f.action;
+    op.appendChild(a);
+
+    var l = document.createElement("span");
+    l.className = "op-label";
+    l.textContent = f.label;
+    op.appendChild(l);
+    if (view === "story") {
+      var s = document.createElement("span");
+      s.className = "op-said";
+      s.textContent = describe(f);
+      op.appendChild(s);
+    }
+  }
+
+  // ================= the story view ================================
+  // Everything here is specific to Continuity: replicas on the left, the
+  // object store on the right, and the request in between.
+
+  /// Both a replica's cached copy and the stored object are the same kind
+  /// of thing, so they are drawn the same way. Seeing two of them side by
+  /// side, naming different things at the same position, is what makes a
+  /// race a picture rather than a claim.
+  function indexTable(idx, opts) {
+    opts = opts || {};
+    var wrap = document.createElement("div");
+    wrap.className = "idx";
+
+    var name = document.createElement("div");
+    name.className = "idx-name";
+    var n = document.createElement("span");
+    n.textContent = opts.name || "index";
+    name.appendChild(n);
+    var tag = document.createElement("span");
+    tag.className = "idx-etag" + (opts.stale ? " stale" : "");
+    tag.textContent = "v" + idx.Version + (opts.stale ? " · stale" : "");
+    name.appendChild(tag);
+    wrap.appendChild(name);
+
+    var last = lengthOf(idx);
+    if (last < 1 && !opts.wants) {
+      var e = document.createElement("div");
+      e.className = "idx-empty";
+      e.textContent = "no entries";
+      wrap.appendChild(e);
+      return wrap;
+    }
+
+    for (var p = 1; p <= last; p++) {
+      var entry = idx.Entries[p] || null;
+      var covered = p <= idx.SnapshotAt;
+
+      var row = document.createElement("div");
+      row.className = "idx-row" +
+        (entry && opts.mine === entry ? " mine" : "") +
+        (!entry && covered ? " snap" : "");
+
+      var pos = document.createElement("span");
+      pos.className = "idx-pos";
+      pos.textContent = "#" + p;
+      row.appendChild(pos);
+
+      var wire = document.createElement("span");
+      wire.className = "idx-wire";
+      row.appendChild(wire);
+
+      var ref = document.createElement("span");
+      ref.className = "idx-ref";
+      ref.textContent = entry ? entry : (covered ? "snapshot" : "—");
+      row.appendChild(ref);
+
+      wrap.appendChild(row);
+    }
+
+    // The position a writer is about to claim, shown as the row it wants.
+    if (opts.wants) {
+      var want = document.createElement("div");
+      want.className = "idx-row mine wants";
+      var wp = document.createElement("span");
+      wp.className = "idx-pos";
+      wp.textContent = "#" + nextPosition(idx);
+      want.appendChild(wp);
+      var ww = document.createElement("span");
+      ww.className = "idx-wire";
+      want.appendChild(ww);
+      var wr = document.createElement("span");
+      wr.className = "idx-ref";
+      wr.textContent = opts.wants;
+      want.appendChild(wr);
+      wrap.appendChild(want);
+    }
+
+    return wrap;
+  }
+
+  function renderReplicas(st, actor) {
+    var host = $("replicas");
+    host.textContent = "";
+
+    replicasOf(st).forEach(function (entry) {
+      var r = entry.r;
+      var stale = isStale(r, st);
+      var pendingId = r.Pending ? r.Pending.PackFile : null;
+
+      var box = document.createElement("div");
+      box.className = "box" + (actor === entry.name ? " acting" : "");
+      box.setAttribute("data-who", entry.name);
+
+      var head = document.createElement("div");
+      head.className = "box-head";
+      var dot = document.createElement("span");
+      dot.className = "box-dot";
+      head.appendChild(dot);
+      var title = document.createElement("p");
+      title.className = "box-title";
+      title.textContent = entry.name;
+      head.appendChild(title);
+      var state = document.createElement("span");
+      state.className = "box-state";
+      state.textContent = r.State;
+      head.appendChild(state);
+      box.appendChild(head);
+
+      var body = document.createElement("div");
+      body.className = "box-body";
+
+      if (r.CachedIndex && pendingId) {
+        // What this writer is about to bet on: the version it holds.
+        var bet = document.createElement("div");
+        bet.className = "bet" + (stale ? " stale" : "");
+        bet.innerHTML =
+          '<span class="bet-k">pending</span><span class="bet-v">' + pendingId + "</span>" +
+          '<span class="bet-k">for pos</span><span class="bet-v">' +
+            nextPosition(r.CachedIndex) + "</span>";
+        body.appendChild(bet);
+      }
+
+      if (r.CachedIndex) {
+        body.appendChild(indexTable(r.CachedIndex, {
+          stale: stale, mine: pendingId, wants: pendingId, name: "cached index"
+        }));
+      } else {
+        var none = document.createElement("div");
+        none.className = "idx-empty";
+        none.textContent = "not read yet";
+        body.appendChild(none);
+      }
+
+      var repo = document.createElement("div");
+      repo.className = "repo";
+      var lbl = document.createElement("span");
+      lbl.className = "label";
+      lbl.textContent = "repository";
+      repo.appendChild(lbl);
+      if (!r.Repository || !r.Repository.length) {
+        var e = document.createElement("span");
+        e.className = "none";
+        e.textContent = "empty";
+        repo.appendChild(e);
+      } else {
+        r.Repository.forEach(function (v) {
+          var c = document.createElement("span");
+          c.className = "cell";
+          c.textContent = v;
+          repo.appendChild(c);
+        });
+      }
+      body.appendChild(repo);
+
+      box.appendChild(body);
+      host.appendChild(box);
+    });
+  }
+
+  function renderStore(st, everSeen) {
+    var objects = $("objects");
+    objects.textContent = "";
+
+    var present = {};
+    Object.keys(st.Store.PackFiles).forEach(function (id) { present[id] = st.Store.PackFiles[id]; });
+    var pending = {};
+    replicasOf(st).forEach(function (e) {
+      if (e.r.Pending) pending[e.r.Pending.PackFile] = true;
+    });
+
+    var any = false;
+    everSeen.forEach(function (id) {
+      var el = document.createElement("span");
+      if (id in present) {
+        el.className = "obj" + (pending[id] ? " pending" : "");
+        el.innerHTML = id + "<small>" + present[id] + "</small>";
+      } else {
+        el.className = "obj gone";
+        el.textContent = id;
+      }
+      objects.appendChild(el);
+      any = true;
+    });
+    Object.keys(st.Store.Snapshots).forEach(function (at) {
+      var el = document.createElement("span");
+      el.className = "obj snapshot";
+      el.innerHTML = "snapshot@" + at +
+        "<small>[" + st.Store.Snapshots[at].join(", ") + "]</small>";
+      objects.appendChild(el);
+      any = true;
+    });
+    if (!any) {
+      var n = document.createElement("span");
+      n.className = "empty-note";
+      n.textContent = "empty";
+      objects.appendChild(n);
+    }
+
+    var idxHost = $("store-index");
+    idxHost.textContent = "";
+    idxHost.appendChild(indexTable(st.Store.Index, { name: "index" }));
+  }
+
+  /// The request on the wire, derived from the two states it sits between.
+  function renderEdge(f, before) {
+    var host = $("edgelabel");
+    var w = requestOf(f, before);
+    if (!w) { host.hidden = true; return; }
+
+    host.hidden = false;
+    host.className = "edgelabel " + (w.failed ? "no" : "ok");
+    host.textContent = "";
+    if (w.detail) {
+      var d = document.createElement("span");
+      d.className = "edge-detail";
+      d.textContent = w.detail;
+      host.appendChild(d);
+    }
+    if (w.result) {
+      var v = document.createElement("span");
+      v.className = "edge-verdict";
+      v.textContent = w.result;
+      host.appendChild(v);
+    }
+  }
+
+  function renderHistory(st) {
+    var host = $("history");
+    host.textContent = "";
+    var lbl = document.createElement("span");
+    lbl.className = "label";
+    lbl.textContent = "committed log";
+    host.appendChild(lbl);
+    if (!st.CommittedLog || !st.CommittedLog.length) {
+      var n = document.createElement("span");
+      n.className = "empty-note";
+      n.textContent = "empty";
+      host.appendChild(n);
+      return;
+    }
+    st.CommittedLog.forEach(function (v, i) {
+      var c = document.createElement("span");
+      c.className = "hcell";
+      c.textContent = "#" + (i + 1) + " · " + v;
+      host.appendChild(c);
+    });
+  }
+
+  /// Dotted wires from each replica to the store, with the acting one live.
+  function renderWires(st, actor) {
+    var svg = $("wires");
+    svg.textContent = "";
+    var all = replicasOf(st);
+    var n = all.length;
+    var w = svg.clientWidth || 96;
+    var h = svg.clientHeight || 160;
+    svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+
+    all.forEach(function (e, i) {
+      var y = h * (i + 0.5) / n;
+      var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", "0");
+      line.setAttribute("y1", String(y));
+      line.setAttribute("x2", String(w));
+      line.setAttribute("y2", String(h / 2));
+      if (actor === e.name) line.setAttribute("class", "live");
+      svg.appendChild(line);
+    });
+  }
+
+  function renderStoryView() {
+    var f = at(), actor = actorOf(f), st = f.state;
+
+    // Objects this run has ever written, so a deletion shows as a deletion
+    // rather than the object silently vanishing.
+    var seen = [];
+    frames().slice(0, frame + 1).forEach(function (fr) {
+      Object.keys(fr.state.Store.PackFiles).forEach(function (id) {
+        if (seen.indexOf(id) < 0) seen.push(id);
+      });
+    });
+    seen.sort();
+
+    renderReplicas(st, actor);
+    renderStore(st, seen);
+    renderEdge(f, prev());
+    renderHistory(st);
+    renderWires(st, actor);
+  }
+
+  // ================= render ========================================
+
+  function render() {
+    Array.prototype.forEach.call($("tabs").querySelectorAll("button"), function (b) {
+      b.setAttribute("aria-selected", String(Number(b.dataset.scenario) === current));
+    });
+    Array.prototype.forEach.call($("views").children, function (b) {
+      b.setAttribute("aria-selected", String(b.dataset.view === view));
+    });
+
+    $("story-view").hidden = view !== "story";
+    $("model-view").hidden = view !== "model";
+
+    renderTimeline();
+    renderStep();
+    if (view === "story") renderStoryView(); else renderModelView();
+
+    var total = frames().length - 1;
+    $("prev").disabled = frame === 0;
+    $("next").disabled = frame >= total;
+    $("counter").textContent = frame + " / " + total;
+  }
+
+  function step(d) {
+    var total = frames().length - 1;
+    var n = Math.min(Math.max(frame + d, 0), total);
+    if (n === frame) return;
+    frame = n;
+    render();
+  }
+
+  $("next").addEventListener("click", function () { step(1); });
+  $("prev").addEventListener("click", function () { step(-1); });
+  $("restart").addEventListener("click", function () { frame = 0; render(); });
+
+  Array.prototype.forEach.call($("views").children, function (b) {
+    b.addEventListener("click", function () { view = b.dataset.view; render(); });
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+  });
+
+  function boot(data) {
+    scenarios = data.scenarios || [];
+    if (!scenarios.length) { fail("scenarios.json has no scenarios."); return; }
+    renderTabs();
+    render();
+  }
+
+  function fail(message) {
+    var host = $("steps");
+    host.textContent = "";
+    var p = document.createElement("p");
+    p.style.cssText = "font-family:var(--mono);font-size:12px;color:var(--gc);" +
+      "border:1px solid var(--gc-line);background:var(--gc-bg);" +
+      "padding:12px 14px;border-radius:8px;max-width:64ch";
+    p.textContent = message;
+    host.appendChild(p);
+  }
+
+  fetch("scenarios.json")
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(boot)
+    .catch(function (e) {
+      fail("Could not load scenarios.json (" + e.message + "). " +
+        "Serve this directory over HTTP — for example `python3 -m http.server` " +
+        "— rather than opening the file directly.");
+    });
+})();
+</script>

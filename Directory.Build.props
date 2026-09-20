@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <!-- The Accordant projects this sample references live in the submodule
+         and carry their own settings; this file only covers the sample. -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+</Project>

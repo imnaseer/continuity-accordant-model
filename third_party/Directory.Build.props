@@ -1,0 +1,5 @@
+<Project>
+  <!-- Stops this repo's Directory.Build.props from reaching into the
+       submodule: Accordant's own props files are the ones that should
+       apply to its projects. -->
+</Project>

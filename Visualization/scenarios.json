@@ -1,0 +1,3761 @@
+{
+  "scenarios": [
+    {
+      "id": "sequential",
+      "title": "Two writes, one after the other",
+      "group": "writing",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "UploadPackFile",
+          "label": "r1-p1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "UploadPackFile",
+          "label": "r1-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "race",
+      "title": "Two writers race for one position",
+      "group": "writing",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "ReadIndex",
+          "label": "r2-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "UploadPackFile",
+          "label": "r1-p1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "UploadPackFile",
+          "label": "r2-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 6,
+          "action": "ReadIndex",
+          "label": "r2-rebase",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Replaying",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 7,
+          "action": "ApplyPackFile",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 8,
+          "action": "CommitToIndex",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "far-behind",
+      "title": "A writer that falls two versions behind",
+      "group": "writing",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "ReadIndex",
+          "label": "r2-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "UploadPackFile",
+          "label": "r1-p1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "UploadPackFile",
+          "label": "r2-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 6,
+          "action": "WriteSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 7,
+          "action": "CommitSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 8,
+          "action": "ReadIndex",
+          "label": "r2-rebase",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Replaying",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 9,
+          "action": "LoadSnapshot",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 10,
+          "action": "CommitToIndex",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "2": "p2"
+                },
+                "SnapshotAt": 1,
+                "Version": 3
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 1,
+                  "Version": 3
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "read-behind-a-write",
+      "title": "A reader served an older prefix",
+      "group": "reading",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "ReadIndex",
+          "label": "r2-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "UploadPackFile",
+          "label": "r1-p1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "ServeRead",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {
+              "1": [
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "index": 6,
+          "action": "UploadPackFile",
+          "label": "r1-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {
+              "1": [
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "index": 7,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {
+              "1": [
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "index": 8,
+          "action": "ReadIndex",
+          "label": "r2-refresh",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Replaying",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {
+              "1": [
+                [
+                  1
+                ]
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "abandoned-snapshot",
+      "title": "A snapshot nobody will ever read",
+      "group": "compacting",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "ReadIndex",
+          "label": "r2-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "UploadPackFile",
+          "label": "r1-p1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "ReadIndex",
+          "label": "r2-refresh",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Replaying",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 6,
+          "action": "ApplyPackFile",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 7,
+          "action": "UploadPackFile",
+          "label": "r1-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 8,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 9,
+          "action": "WriteSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "2": [
+                  1,
+                  2
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 10,
+          "action": "CommitSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "2": [
+                  1,
+                  2
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 2,
+                "Version": 3
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 2,
+                  "Version": 3
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 11,
+          "action": "WriteSnapshot",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "2": [
+                  1,
+                  2
+                ],
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 2,
+                "Version": 3
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 2,
+                  "Version": 3
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "snapshot-race",
+      "title": "Two replicas compact at the same time",
+      "group": "compacting",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "ReadIndex",
+          "label": "r2-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "UploadPackFile",
+          "label": "r1-p1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "ReadIndex",
+          "label": "r2-refresh",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Replaying",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 6,
+          "action": "ApplyPackFile",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 7,
+          "action": "UploadPackFile",
+          "label": "r1-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 8,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 9,
+          "action": "WriteSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "2": [
+                  1,
+                  2
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 10,
+          "action": "WriteSnapshot",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "2": [
+                  1,
+                  2
+                ],
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "1": "p1",
+                  "2": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1",
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 2
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 11,
+          "action": "CommitSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "2": [
+                  1,
+                  2
+                ],
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 2,
+                "Version": 3
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 2,
+                  "Version": 3
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "compaction-under-a-writer",
+      "title": "Compaction lands under a writer",
+      "group": "compacting",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "ReadIndex",
+          "label": "r2-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "UploadPackFile",
+          "label": "r1-p1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p1",
+                  "Value": 1
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "ReadIndex",
+          "label": "r2-refresh",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Replaying",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 6,
+          "action": "ApplyPackFile",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 7,
+          "action": "UploadPackFile",
+          "label": "r1-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 8,
+          "action": "WriteSnapshot",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "1": "p1"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 9,
+          "action": "CommitSnapshot",
+          "label": "r2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p1"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 10,
+          "action": "ReadIndex",
+          "label": "r1-rebase",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 11,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p1": 1,
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  1
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "2": "p2"
+                },
+                "SnapshotAt": 1,
+                "Version": 3
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "2": "p2"
+                  },
+                  "SnapshotAt": 1,
+                  "Version": 3
+                },
+                "Repository": [
+                  1,
+                  2
+                ]
+              },
+              "r2": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  1
+                ]
+              }
+            },
+            "CommittedLog": [
+              1,
+              2
+            ],
+            "ReadsServed": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "compaction",
+      "title": "Compaction before anyone reads",
+      "group": "compacting",
+      "replicas": [
+        "r1",
+        "r2"
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "New",
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 1,
+          "action": "ReadIndex",
+          "label": "r1-start",
+          "state": {
+            "Store": {
+              "PackFiles": {},
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": []
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 2,
+          "action": "UploadPackFile",
+          "label": "r1-p2",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 0,
+                "Version": 0
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Pushing",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 0,
+                  "Version": 0
+                },
+                "Repository": [],
+                "Pending": {
+                  "PackFile": "p2",
+                  "Value": 2
+                }
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 3,
+          "action": "CommitToIndex",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p2": 2
+              },
+              "Snapshots": {},
+              "Index": {
+                "Entries": {
+                  "1": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  2
+                ]
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 4,
+          "action": "WriteSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  2
+                ]
+              },
+              "Index": {
+                "Entries": {
+                  "1": "p2"
+                },
+                "SnapshotAt": 0,
+                "Version": 1
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Compacting",
+                "CachedIndex": {
+                  "Entries": {
+                    "1": "p2"
+                  },
+                  "SnapshotAt": 0,
+                  "Version": 1
+                },
+                "Repository": [
+                  2
+                ]
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 5,
+          "action": "CommitSnapshot",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  2
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  2
+                ]
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              2
+            ],
+            "ReadsServed": {}
+          }
+        },
+        {
+          "index": 6,
+          "action": "ServeRead",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  2
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  2
+                ]
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              2
+            ],
+            "ReadsServed": {
+              "1": [
+                [
+                  2
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "index": 7,
+          "action": "ServeRead",
+          "label": "r1",
+          "state": {
+            "Store": {
+              "PackFiles": {
+                "p2": 2
+              },
+              "Snapshots": {
+                "1": [
+                  2
+                ]
+              },
+              "Index": {
+                "Entries": {},
+                "SnapshotAt": 1,
+                "Version": 2
+              }
+            },
+            "Replicas": {
+              "r1": {
+                "State": "Ready",
+                "CachedIndex": {
+                  "Entries": {},
+                  "SnapshotAt": 1,
+                  "Version": 2
+                },
+                "Repository": [
+                  2
+                ]
+              },
+              "r2": {
+                "State": "New",
+                "Repository": []
+              }
+            },
+            "CommittedLog": [
+              2
+            ],
+            "ReadsServed": {
+              "1": [
+                [
+                  2
+                ]
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
